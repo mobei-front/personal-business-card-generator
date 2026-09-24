@@ -11,6 +11,7 @@
   --primary: #7c3aed;
   --btn-blue: #3b82f6;
   --btn-green: #34d399;
+  --btn-orange: #f59e0b;
   --text-main: #1f2937;
   --text-sub: #6b7280;
   --text-weak: #9ca3af;
@@ -118,4 +119,16 @@ body::after {
 .btn-green {
   background: var(--btn-green);
   color: #064e3b;
+}
+
+.btn-orange {
+  background: var(--btn-orange);
+  color: #451a03;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }

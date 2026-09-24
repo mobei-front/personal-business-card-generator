@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, onUnmounted } from 'vue'
+import html2canvas from 'html2canvas'
 
 // 名片预览组件：纯展示 + 事件上报，状态由父组件管理
 const props = defineProps({
@@ -96,10 +97,47 @@ onUnmounted(() => {
   if (typeTimer !== null) clearInterval(typeTimer)
   if (cursorTimer !== null) clearTimeout(cursorTimer)
 })
+
+// 导出名片为图片
+const cardRef = ref(null)
+const exporting = ref(false)
+
+async function exportImage() {
+  if (!cardRef.value || exporting.value) return
+  exporting.value = true
+  try {
+    const canvas = await html2canvas(cardRef.value, {
+      useCORS: true,
+      scale: 2,
+      backgroundColor: null,
+      logging: false,
+      onclone: (clonedDoc) => {
+        // 在克隆 DOM 中渲染完整简介文本、隐藏光标，不影响原页面打字机动画
+        const clonedCard = clonedDoc.querySelector('.card-preview')
+        if (!clonedCard) return
+        const bioEl = clonedCard.querySelector('.bio')
+        if (bioEl) {
+          bioEl.textContent = props.form.bio
+          bioEl.style.display = props.form.bio ? 'block' : 'none'
+        }
+        const cursorEl = clonedCard.querySelector('.cursor')
+        if (cursorEl) cursorEl.style.display = 'none'
+        const toggleEl = clonedCard.querySelector('.toggle-bio')
+        if (toggleEl) toggleEl.style.display = 'none'
+      }
+    })
+    const link = document.createElement('a')
+    link.download = `${props.form.name || '名片'}-名片.png`
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  } finally {
+    exporting.value = false
+  }
+}
 </script>
 
 <template>
-  <section class="card-preview glass" :class="'theme-' + theme.id">
+  <section ref="cardRef" class="card-preview glass" :class="'theme-' + theme.id">
     <!-- 主题切换圆点 -->
     <div class="theme-dots" role="tablist" aria-label="名片主题">
       <button
@@ -151,6 +189,9 @@ onUnmounted(() => {
     <div class="actions">
       <button class="btn btn-blue" @click="$emit('next-theme')">切换名片</button>
       <button class="btn btn-green" @click="$emit('reset')">重置名片</button>
+      <button class="btn btn-orange" :disabled="exporting" @click="exportImage">
+        {{ exporting ? '导出中...' : '导出图片' }}
+      </button>
     </div>
   </section>
 </template>
