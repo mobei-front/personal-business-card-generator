@@ -1,0 +1,19 @@
+{
+  "name": "personal-business-card-generator",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "基于 Vue 3 + Vite 的个人名片生成器",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.12"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "vite": "^5.4.10"
+  }
+}
