@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onUnmounted } from 'vue'
-import html2canvas from 'html2canvas'
+import { toPng } from 'html-to-image'
 
 // 名片预览组件：纯展示 + 事件上报，状态由父组件管理
 const props = defineProps({
@@ -98,39 +98,86 @@ onUnmounted(() => {
   if (cursorTimer !== null) clearTimeout(cursorTimer)
 })
 
-// 导出名片为图片
+// 导出名片为图片（使用 html-to-image，基于浏览器 foreignObject 渲染）
 const cardRef = ref(null)
 const exporting = ref(false)
 
 async function exportImage() {
   if (!cardRef.value || exporting.value) return
   exporting.value = true
+  // 离屏克隆节点，避免影响页面上正在展示的名片
+  const original = cardRef.value
+  const clone = original.cloneNode(true)
+  clone.classList.add('export-clone')
+  // 显式设置宽高，脱离 grid 布局后保持与原卡片一致
+  const rect = original.getBoundingClientRect()
+  clone.style.width = `${rect.width}px`
+  clone.style.minWidth = `${rect.width}px`
+
+  // 1. 移除液态玻璃中渲染引擎不支持的层（SVG 位移滤镜 + mask 折射层）
+  clone.querySelector('.lg-refract')?.remove()
+  clone.querySelector('.lg-svg')?.remove()
+
+  // 2. 用纯色背景模拟磨砂玻璃（原页面背景为 #ede9fe），去掉 backdrop-filter
+  clone.style.background = '#f5f3ff'
+  clone.style.backdropFilter = 'none'
+  clone.style.webkitBackdropFilter = 'none'
+  clone.style.border = '1px solid rgba(255,255,255,0.8)'
+  clone.style.position = 'absolute'
+  clone.style.left = '0'
+  clone.style.top = '0'
+
+  // 3. 注入样式：隐藏伪元素的 mask 描边与动画高光，保证内容层级
+  const styleEl = document.createElement('style')
+  styleEl.textContent = `
+    .export-clone::before, .export-clone::after {
+      display: none !important;
+      background: none !important;
+    }
+    .export-clone > *:not(.lg-svg):not(.lg-refract) {
+      position: relative !important;
+      z-index: 3 !important;
+    }
+  `
+  clone.appendChild(styleEl)
+
+  // 4. 注入高光层（真实 div，比伪元素稳定）
+  const highlight = document.createElement('div')
+  highlight.style.cssText = `
+    position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1;
+    background: linear-gradient(125deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.15) 25%, rgba(255,255,255,0) 45%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.12) 100%);
+  `
+  clone.insertBefore(highlight, clone.firstChild)
+
+  // 5. 简介渲染完整文本、隐藏光标和收起按钮
+  const bioEl = clone.querySelector('.bio')
+  if (bioEl) {
+    bioEl.textContent = props.form.bio
+    bioEl.style.display = props.form.bio ? 'block' : 'none'
+  }
+  clone.querySelector('.cursor')?.remove()
+  const toggleEl = clone.querySelector('.toggle-bio')
+  if (toggleEl) toggleEl.style.display = 'none'
+
+  // 6. 用零尺寸 overflow:hidden 的 wrapper 包裹，保证克隆节点 bounding rect 坐标正常（0,0），
+  //    同时对用户不可见，避免 html-to-image 因负坐标导致内容偏移
+  const wrapper = document.createElement('div')
+  wrapper.style.cssText = 'position:fixed;left:0;top:0;width:0;height:0;overflow:hidden;'
+  wrapper.appendChild(clone)
+  document.body.appendChild(wrapper)
+
   try {
-    const canvas = await html2canvas(cardRef.value, {
-      useCORS: true,
-      scale: 2,
-      backgroundColor: null,
-      logging: false,
-      onclone: (clonedDoc) => {
-        // 在克隆 DOM 中渲染完整简介文本、隐藏光标，不影响原页面打字机动画
-        const clonedCard = clonedDoc.querySelector('.card-preview')
-        if (!clonedCard) return
-        const bioEl = clonedCard.querySelector('.bio')
-        if (bioEl) {
-          bioEl.textContent = props.form.bio
-          bioEl.style.display = props.form.bio ? 'block' : 'none'
-        }
-        const cursorEl = clonedCard.querySelector('.cursor')
-        if (cursorEl) cursorEl.style.display = 'none'
-        const toggleEl = clonedCard.querySelector('.toggle-bio')
-        if (toggleEl) toggleEl.style.display = 'none'
-      }
+    const dataUrl = await toPng(clone, {
+      pixelRatio: 2,
+      cacheBust: true,
+      backgroundColor: '#f5f3ff'
     })
     const link = document.createElement('a')
     link.download = `${props.form.name || '名片'}-名片.png`
-    link.href = canvas.toDataURL('image/png')
+    link.href = dataUrl
     link.click()
   } finally {
+    document.body.removeChild(wrapper)
     exporting.value = false
   }
 }
