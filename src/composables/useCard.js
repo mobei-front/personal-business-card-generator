@@ -38,6 +38,8 @@ function reset() {
   avatarOk.value = true
   bioExpanded.value = true
   theme.value = themes[0]
+  // 重置后驱动预览重新播放简介打字机
+  bioTypeKey.value++
 }
 
 function toggleBio() {

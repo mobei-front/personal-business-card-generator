@@ -34,7 +34,7 @@ const props = defineProps({
   }
 })
 
-defineEmits(['select-theme', 'next-theme', 'reset', 'toggle-bio', 'avatar-error'])
+defineEmits(['select-theme', 'next-theme', 'toggle-bio', 'avatar-error'])
 
 // 简介打字机效果
 const typedBio = ref('')
@@ -247,7 +247,6 @@ async function exportImage() {
     <!-- 操作按钮 -->
     <div class="actions">
       <button class="btn btn-blue" @click="$emit('next-theme')">切换名片</button>
-      <button class="btn btn-green" @click="$emit('reset')">重置名片</button>
       <button class="btn btn-orange" :disabled="exporting" @click="exportImage">
         {{ exporting ? '导出中...' : '导出图片' }}
       </button>

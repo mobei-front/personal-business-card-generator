@@ -7,7 +7,7 @@ const form = defineModel('form', {
   required: true
 })
 
-defineEmits(['bio-blur'])
+defineEmits(['bio-blur', 'reset'])
 </script>
 
 <template>
@@ -32,6 +32,10 @@ defineEmits(['bio-blur'])
         placeholder="https://..."
         hint="支持任意在线图片地址，加载失败时显示首字母占位"
       />
+
+      <div class="form-actions">
+        <button class="btn btn-green" @click="$emit('reset')">重置名片</button>
+      </div>
     </form>
   </section>
 </template>
@@ -49,5 +53,11 @@ defineEmits(['bio-blur'])
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

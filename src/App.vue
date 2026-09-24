@@ -35,13 +35,12 @@ const {
         :initials="initials"
         @select-theme="selectTheme"
         @next-theme="nextTheme"
-        @reset="reset"
         @toggle-bio="toggleBio"
         @avatar-error="onAvatarError"
       />
 
       <!-- 右侧：编辑表单 -->
-      <CardForm v-model:form="form" @bio-blur="triggerBioType" />
+      <CardForm v-model:form="form" @bio-blur="triggerBioType" @reset="reset" />
     </div>
   </div>
 </template>
