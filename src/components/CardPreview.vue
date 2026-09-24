@@ -1,6 +1,8 @@
 <script setup>
+import { ref, watch, onUnmounted } from 'vue'
+
 // 名片预览组件：纯展示 + 事件上报，状态由父组件管理
-defineProps({
+const props = defineProps({
   form: {
     type: Object,
     required: true
@@ -28,6 +30,54 @@ defineProps({
 })
 
 defineEmits(['select-theme', 'next-theme', 'reset', 'toggle-bio', 'avatar-error'])
+
+// 简介打字机效果
+const typedBio = ref('')
+const typing = ref(false)
+let typeTimer = null
+
+function stopTypewriter() {
+  if (typeTimer !== null) {
+    clearInterval(typeTimer)
+    typeTimer = null
+  }
+  typing.value = false
+}
+
+function startTypewriter() {
+  if (typeTimer !== null || typedBio.value === props.form.bio) return
+  typing.value = true
+  typeTimer = setInterval(() => {
+    typedBio.value = props.form.bio.slice(0, typedBio.value.length + 1)
+    if (typedBio.value === props.form.bio) stopTypewriter()
+  }, 55)
+}
+
+// 简介内容变化：追加输入时继续打，删改时从头重打
+watch(
+  () => props.form.bio,
+  (bio) => {
+    if (!props.bioExpanded) return
+    if (!bio.startsWith(typedBio.value)) typedBio.value = ''
+    startTypewriter()
+  },
+  { immediate: true }
+)
+
+// 展开时重新播放打字效果，收起时暂停
+watch(
+  () => props.bioExpanded,
+  (expanded) => {
+    if (expanded) {
+      typedBio.value = ''
+      startTypewriter()
+    } else {
+      stopTypewriter()
+    }
+  }
+)
+
+onUnmounted(stopTypewriter)
 </script>
 
 <template>
@@ -71,7 +121,9 @@ defineEmits(['select-theme', 'next-theme', 'reset', 'toggle-bio', 'avatar-error'
 
     <!-- 简介（可收起） -->
     <transition name="fade">
-      <p v-show="bioExpanded && form.bio" class="bio">{{ form.bio }}</p>
+      <p v-show="bioExpanded && form.bio" class="bio">
+        {{ typedBio }}<span v-if="typing" class="cursor"></span>
+      </p>
     </transition>
     <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
       {{ bioExpanded ? '收起简介' : '展开简介' }}
@@ -248,6 +300,22 @@ defineEmits(['select-theme', 'next-theme', 'reset', 'toggle-bio', 'avatar-error'
 
 .theme-sunset .divider {
   background: linear-gradient(90deg, #fbbf24, #fb7185);
+}
+
+/* 光标 */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--text-sub);
+  vertical-align: middle;
+  margin-left: 2px;
+  animation: blink 0.9s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* 简介展开/收起过渡 */
