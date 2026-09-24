@@ -257,7 +257,7 @@ async function exportImage() {
 <style scoped>
 .card-preview {
   position: relative;
-  padding: 40px 28px 28px;
+  padding: 36px 25px 25px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -366,13 +366,13 @@ async function exportImage() {
 /* 主题切换圆点 */
 .theme-dots {
   display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 7px;
+  margin-bottom: 18px;
 }
 
 .theme-dot {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   cursor: pointer;
   border: 2px solid rgba(255, 255, 255, 0.8);
@@ -393,11 +393,11 @@ async function exportImage() {
 
 /* 头像 */
 .avatar-wrap {
-  width: 120px;
-  height: 120px;
+  width: 108px;
+  height: 108px;
   border-radius: 50%;
   padding: 4px;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   transition: background 0.4s ease;
 }
 
@@ -417,7 +417,7 @@ async function exportImage() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 40px;
+  font-size: 36px;
   font-weight: 700;
   color: #fff;
   background: linear-gradient(135deg, #a78bfa, #818cf8);
@@ -425,7 +425,7 @@ async function exportImage() {
 
 /* 文字信息 */
 .name {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
   color: var(--text-main);
   letter-spacing: 0.5px;
@@ -437,28 +437,28 @@ async function exportImage() {
 }
 
 .title {
-  margin-top: 6px;
-  font-size: 14px;
+  margin-top: 5px;
+  font-size: 13px;
   color: var(--text-sub);
 }
 
 .company {
   margin-top: 4px;
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text-weak);
 }
 
 .divider {
-  width: 40px;
+  width: 36px;
   height: 3px;
   border-radius: 2px;
-  margin: 14px 0;
+  margin: 13px 0;
   transition: background 0.4s ease;
 }
 
 /* 简介 */
 .bio {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--text-sub);
   text-align: center;
@@ -466,8 +466,8 @@ async function exportImage() {
 }
 
 .toggle-bio {
-  margin-top: 10px;
-  font-size: 13px;
+  margin-top: 9px;
+  font-size: 12px;
   color: var(--link);
   background: none;
   border: none;
@@ -482,9 +482,9 @@ async function exportImage() {
 
 /* 按钮区 */
 .actions {
-  margin-top: 24px;
+  margin-top: 22px;
   display: flex;
-  gap: 12px;
+  gap: 11px;
 }
 
 /* 主题配色 */

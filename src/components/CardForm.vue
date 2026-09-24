@@ -42,21 +42,21 @@ defineEmits(['bio-blur', 'reset'])
 
 <style scoped>
 .card-form {
-  padding: 36px 32px;
+  padding: 32px 29px;
 }
 
 .form-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .form-actions {
-  margin-top: 24px;
+  margin-top: 22px;
   display: flex;
   justify-content: flex-end;
 }

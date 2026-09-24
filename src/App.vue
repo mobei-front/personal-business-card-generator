@@ -23,6 +23,9 @@ const {
 
 <template>
   <div class="app">
+    <header class="app-header">
+      <h1 class="app-title">个人名片生成器</h1>
+    </header>
     <div class="layout">
       <!-- 左侧：名片预览 -->
       <CardPreview

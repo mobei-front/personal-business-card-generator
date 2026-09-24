@@ -57,7 +57,7 @@ defineEmits(['update:modelValue', 'blur', 'change'])
 
 <style scoped>
 .field {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .field:last-child {
@@ -66,17 +66,17 @@ defineEmits(['update:modelValue', 'blur', 'change'])
 
 .label {
   display: block;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--primary);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 10px 14px;
-  font-size: 14px;
+  padding: 9px 13px;
+  font-size: 13px;
   color: var(--text-main);
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid #e5e7eb;
@@ -94,12 +94,12 @@ defineEmits(['update:modelValue', 'blur', 'change'])
 
 .textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 72px;
   line-height: 1.5;
 }
 
 .hint {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-weak);
   margin-top: 4px;
 }
