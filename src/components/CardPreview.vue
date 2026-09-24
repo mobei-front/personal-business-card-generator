@@ -114,9 +114,10 @@ async function exportImage() {
   clone.style.width = `${rect.width}px`
   clone.style.minWidth = `${rect.width}px`
 
-  // 1. 移除液态玻璃中渲染引擎不支持的层（SVG 位移滤镜 + mask 折射层）
+  // 1. 移除液态玻璃中渲染引擎不支持的层（SVG 位移滤镜 + mask 折射层）以及导出图标
   clone.querySelector('.lg-refract')?.remove()
   clone.querySelector('.lg-svg')?.remove()
+  clone.querySelector('.export-icon')?.remove()
 
   // 2. 用纯色背景模拟磨砂玻璃（原页面背景为 #ede9fe），去掉 backdrop-filter
   clone.style.background = '#f5f3ff'
@@ -197,6 +198,23 @@ async function exportImage() {
     <!-- 边缘折射层：仅在卡片边缘产生液态形变，中心不变形 -->
     <div class="lg-refract" aria-hidden="true"></div>
 
+    <!-- 右上角导出图标 -->
+    <button
+      class="export-icon"
+      :disabled="exporting"
+      :title="exporting ? '导出中...' : '导出图片'"
+      @click="exportImage"
+    >
+      <svg v-if="!exporting" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+        <polyline points="7 10 12 15 17 10" />
+        <line x1="12" y1="15" x2="12" y2="3" />
+      </svg>
+      <svg v-else class="spin" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+      </svg>
+    </button>
+
     <!-- 主题切换圆点 -->
     <div class="theme-dots" role="tablist" aria-label="名片主题">
       <button
@@ -247,9 +265,6 @@ async function exportImage() {
     <!-- 操作按钮 -->
     <div class="actions">
       <button class="btn btn-blue" @click="$emit('next-theme')">切换名片</button>
-      <button class="btn btn-orange" :disabled="exporting" @click="exportImage">
-        {{ exporting ? '导出中...' : '导出图片' }}
-      </button>
     </div>
   </section>
 </template>
@@ -358,7 +373,7 @@ async function exportImage() {
 }
 
 /* 内容层置于所有视觉层之上 */
-.card-preview > *:not(.lg-svg):not(.lg-refract) {
+.card-preview > *:not(.lg-svg):not(.lg-refract):not(.export-icon) {
   position: relative;
   z-index: 3;
 }
@@ -485,6 +500,47 @@ async function exportImage() {
   margin-top: 22px;
   display: flex;
   gap: 11px;
+}
+
+/* 右上角导出图标 */
+.card-preview .export-icon {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 5;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  color: #5b21b6;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(31, 38, 135, 0.18);
+  transition: background 0.2s, transform 0.2s, color 0.2s;
+}
+
+.card-preview .export-icon:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.85);
+  transform: scale(1.08);
+  color: #7c3aed;
+}
+
+.card-preview .export-icon:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.export-icon .spin {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 /* 主题配色 */
