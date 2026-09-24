@@ -6,6 +6,8 @@ const form = defineModel('form', {
   type: Object,
   required: true
 })
+
+defineEmits(['bio-blur'])
 </script>
 
 <template>
@@ -21,6 +23,7 @@ const form = defineModel('form', {
         label="个人简介"
         type="textarea"
         placeholder="一句话介绍自己"
+        @blur="$emit('bio-blur')"
       />
       <FormField
         v-model="form.avatar"

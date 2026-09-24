@@ -23,7 +23,7 @@ defineProps({
   }
 })
 
-defineEmits(['update:modelValue'])
+defineEmits(['update:modelValue', 'blur'])
 </script>
 
 <template>
@@ -36,6 +36,7 @@ defineEmits(['update:modelValue'])
       :value="modelValue"
       :placeholder="placeholder"
       @input="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur')"
     ></textarea>
 
     <input
@@ -45,6 +46,7 @@ defineEmits(['update:modelValue'])
       :value="modelValue"
       :placeholder="placeholder"
       @input="$emit('update:modelValue', $event.target.value)"
+      @blur="$emit('blur')"
     />
 
     <div v-if="hint" class="hint">{{ hint }}</div>

@@ -10,11 +10,13 @@ const {
   theme,
   avatarOk,
   bioExpanded,
+  bioTypeKey,
   initials,
   selectTheme,
   nextTheme,
   reset,
   toggleBio,
+  triggerBioType,
   onAvatarError
 } = useCard()
 </script>
@@ -29,6 +31,7 @@ const {
         :theme="theme"
         :avatar-ok="avatarOk"
         :bio-expanded="bioExpanded"
+        :bio-type-key="bioTypeKey"
         :initials="initials"
         @select-theme="selectTheme"
         @next-theme="nextTheme"
@@ -38,7 +41,7 @@ const {
       />
 
       <!-- 右侧：编辑表单 -->
-      <CardForm v-model:form="form" />
+      <CardForm v-model:form="form" @bio-blur="triggerBioType" />
     </div>
   </div>
 </template>

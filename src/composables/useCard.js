@@ -15,6 +15,8 @@ const form = reactive(createDefaultForm())
 const theme = ref(themes[0])
 const avatarOk = ref(true)
 const bioExpanded = ref(true)
+// 简介打字机触发信号：简介输入框失去焦点时 +1，驱动预览重新播放打字机
+const bioTypeKey = ref(0)
 
 // 头像加载失败时展示姓名首字母
 const initials = computed(() => {
@@ -42,6 +44,10 @@ function toggleBio() {
   bioExpanded.value = !bioExpanded.value
 }
 
+function triggerBioType() {
+  bioTypeKey.value++
+}
+
 function onAvatarError() {
   avatarOk.value = false
 }
@@ -61,11 +67,13 @@ export function useCard() {
     theme,
     avatarOk,
     bioExpanded,
+    bioTypeKey,
     initials,
     selectTheme,
     nextTheme,
     reset,
     toggleBio,
+    triggerBioType,
     onAvatarError
   }
 }

@@ -23,6 +23,10 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
+  bioTypeKey: {
+    type: Number,
+    default: 0
+  },
   initials: {
     type: String,
     default: '?'
@@ -62,12 +66,13 @@ function startTypewriter() {
   }, 90)
 }
 
-// 简介内容变化：追加输入时继续打，删改时从头重打
+// 简介输入框失去焦点时（bioTypeKey 变化），从头播放打字机效果
 watch(
-  () => props.form.bio,
-  (bio) => {
+  () => props.bioTypeKey,
+  () => {
     if (!props.bioExpanded) return
-    if (!bio.startsWith(typedBio.value)) typedBio.value = ''
+    stopTypewriter()
+    typedBio.value = ''
     startTypewriter()
   },
   { immediate: true }
@@ -78,6 +83,7 @@ watch(
   () => props.bioExpanded,
   (expanded) => {
     if (expanded) {
+      stopTypewriter()
       typedBio.value = ''
       startTypewriter()
     } else {
