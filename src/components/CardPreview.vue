@@ -138,6 +138,18 @@ async function exportImage() {
 
 <template>
   <section ref="cardRef" class="card-preview glass" :class="'theme-' + theme.id">
+    <!-- 液态玻璃：SVG 边缘折射滤镜 -->
+    <svg class="lg-svg" aria-hidden="true">
+      <defs>
+        <filter id="liquid-glass" x="-10%" y="-10%" width="120%" height="120%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="2" seed="7" result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </defs>
+    </svg>
+    <!-- 边缘折射层：仅在卡片边缘产生液态形变，中心不变形 -->
+    <div class="lg-refract" aria-hidden="true"></div>
+
     <!-- 主题切换圆点 -->
     <div class="theme-dots" role="tablist" aria-label="名片主题">
       <button
@@ -198,10 +210,111 @@ async function exportImage() {
 
 <style scoped>
 .card-preview {
+  position: relative;
   padding: 40px 28px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
+  /* 液态玻璃基础：低透明度 + 强磨砂饱和，让背景色彩充分透出 */
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(30px) saturate(220%);
+  -webkit-backdrop-filter: blur(30px) saturate(220%);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  /* 多层阴影：顶部内高光 + 底部内反光 + 外投影，塑造玻璃厚度与悬浮感 */
+  box-shadow:
+    inset 0 2px 2px rgba(255, 255, 255, 0.95),
+    inset 0 -2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 0 60px rgba(255, 255, 255, 0.08),
+    0 18px 50px rgba(31, 38, 135, 0.22),
+    0 4px 14px rgba(31, 38, 135, 0.1);
+  z-index: 0;
+}
+
+/* SVG 滤镜仅作定义，不占位 */
+.lg-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* 边缘折射层：用 SVG 位移滤镜模拟液态玻璃边缘形变，
+   径向遮罩让中心透明、仅边缘产生折射，保证内容不变形 */
+.lg-refract {
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.18);
+  filter: url(#liquid-glass);
+  -webkit-mask: radial-gradient(
+    ellipse at center,
+    transparent 32%,
+    rgba(0, 0, 0, 0.5) 65%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  mask: radial-gradient(
+    ellipse at center,
+    transparent 32%,
+    rgba(0, 0, 0, 0.5) 65%,
+    rgba(0, 0, 0, 1) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 镜面高光层：斜向反光 + 缓慢流动动画，模拟液态表面的光泽变化 */
+.card-preview::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.15) 25%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(255, 255, 255, 0) 70%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  background-size: 200% 200%;
+  animation: lg-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes lg-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* 液态描边：更亮的渐变光带勾勒玻璃边缘 */
+.card-preview::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.2) 30%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0.15) 70%,
+    rgba(255, 255, 255, 0.85) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 内容层置于所有视觉层之上 */
+.card-preview > *:not(.lg-svg):not(.lg-refract) {
+  position: relative;
+  z-index: 3;
 }
 
 /* 主题切换圆点 */

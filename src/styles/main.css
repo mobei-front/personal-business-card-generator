@@ -8,6 +8,8 @@
   --bg-1: #e0e7ff;
   --bg-2: #f3e8ff;
   --bg-3: #dbeafe;
+  --bg-4: #fce7f3;
+  --bg-5: #ccfbf1;
   --primary: #7c3aed;
   --btn-blue: #3b82f6;
   --btn-green: #34d399;
@@ -27,34 +29,6 @@ body {
   background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
-}
-
-/* 背景装饰光斑 */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.55;
-  z-index: 0;
-  pointer-events: none;
-}
-
-body::before {
-  width: 380px;
-  height: 380px;
-  background: #c4b5fd;
-  top: -80px;
-  left: -80px;
-}
-
-body::after {
-  width: 420px;
-  height: 420px;
-  background: #93c5fd;
-  bottom: -100px;
-  right: -100px;
 }
 
 .app {
