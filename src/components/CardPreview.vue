@@ -34,7 +34,9 @@ defineEmits(['select-theme', 'next-theme', 'reset', 'toggle-bio', 'avatar-error'
 // 简介打字机效果
 const typedBio = ref('')
 const typing = ref(false)
+const cursorVisible = ref(false)
 let typeTimer = null
+let cursorTimer = null
 
 function stopTypewriter() {
   if (typeTimer !== null) {
@@ -42,15 +44,22 @@ function stopTypewriter() {
     typeTimer = null
   }
   typing.value = false
+  // 打字完成后光标再闪烁 500ms 再关闭
+  cursorVisible.value = true
+  if (cursorTimer !== null) clearTimeout(cursorTimer)
+  cursorTimer = setTimeout(() => {
+    cursorVisible.value = false
+  }, 500)
 }
 
 function startTypewriter() {
   if (typeTimer !== null || typedBio.value === props.form.bio) return
+  cursorVisible.value = true
   typing.value = true
   typeTimer = setInterval(() => {
     typedBio.value = props.form.bio.slice(0, typedBio.value.length + 1)
     if (typedBio.value === props.form.bio) stopTypewriter()
-  }, 55)
+  }, 90)
 }
 
 // 简介内容变化：追加输入时继续打，删改时从头重打
@@ -77,7 +86,10 @@ watch(
   }
 )
 
-onUnmounted(stopTypewriter)
+onUnmounted(() => {
+  if (typeTimer !== null) clearInterval(typeTimer)
+  if (cursorTimer !== null) clearTimeout(cursorTimer)
+})
 </script>
 
 <template>
@@ -122,7 +134,7 @@ onUnmounted(stopTypewriter)
     <!-- 简介（可收起） -->
     <transition name="fade">
       <p v-show="bioExpanded && form.bio" class="bio">
-        {{ typedBio }}<span v-if="typing" class="cursor"></span>
+        {{ typedBio }}<span v-if="cursorVisible" class="cursor"></span>
       </p>
     </transition>
     <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
