@@ -54,81 +54,73 @@ function handleComplete() {
 
 <template>
   <section class="glass card-form">
-    <h3 class="form-title">编辑名片 <span>✨</span></h3>
+    <h3 class="form-title">编辑名片 ✨</h3>
 
-    <form @submit.prevent>
-      <n-form label-placement="top" size="large">
-        <n-form-item label="姓名">
-          <n-input v-model:value="form.name" placeholder="请输入姓名" />
-        </n-form-item>
-        <n-form-item label="职位">
-          <n-input v-model:value="form.title" placeholder="请输入职位" />
-        </n-form-item>
-        <n-form-item label="公司">
-          <n-input v-model:value="form.company" placeholder="请输入公司" />
-        </n-form-item>
-        <n-form-item label="个人简介">
-          <n-input
-            v-model:value="form.bio"
-            type="textarea"
-            placeholder="一句话介绍自己"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-            @change="$emit('bio-blur')"
-          />
-        </n-form-item>
-        <n-form-item label="头像链接">
-          <n-input v-model:value="form.avatar" type="url" placeholder="https://..." />
-          <template #feedback>
-            <span class="field-hint">支持任意在线图片地址，加载失败时显示首字母占位</span>
-          </template>
-        </n-form-item>
-      </n-form>
+    <n-form size="large" @submit.prevent>
+      <n-form-item label="姓名">
+        <n-input v-model:value="form.name" placeholder="请输入姓名" />
+      </n-form-item>
+      <n-form-item label="职位">
+        <n-input v-model:value="form.title" placeholder="请输入职位" />
+      </n-form-item>
+      <n-form-item label="公司">
+        <n-input v-model:value="form.company" placeholder="请输入公司" />
+      </n-form-item>
+      <n-form-item label="个人简介">
+        <n-input
+          v-model:value="form.bio"
+          type="textarea"
+          placeholder="一句话介绍自己"
+          :autosize="{ minRows: 2, maxRows: 4 }"
+          @change="$emit('bio-blur')"
+        />
+      </n-form-item>
+      <n-form-item label="头像链接">
+        <n-input v-model:value="form.avatar" type="url" placeholder="https://..." />
+        <template #feedback>
+          <span class="field-hint">支持任意在线图片地址，加载失败时显示首字母占位</span>
+        </template>
+      </n-form-item>
+    </n-form>
 
-      <!-- 联系方式入口按钮 -->
-      <button type="button" class="contact-entry" @click="openDrawer">
-        <svg class="entry-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-        </svg>
-        <span class="entry-text">联系方式</span>
-        <span v-if="contactCount" class="entry-count">{{ contactCount }} 项已填</span>
-        <span v-else class="entry-hint required">请填写必要的联系方式</span>
-        <svg class="entry-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </button>
+    <!-- 联系方式入口按钮 -->
+    <button type="button" class="contact-entry" @click="openDrawer">
+      <svg class="entry-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+      </svg>
+      <span class="entry-text">联系方式</span>
+      <span v-if="contactCount" class="entry-count">{{ contactCount }} 项已填</span>
+      <span v-else class="entry-hint required">请填写必要的联系方式</span>
+      <svg class="entry-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </svg>
+    </button>
 
-      <!-- 名片主题选择 -->
-      <div class="theme-field">
-        <label class="theme-label">名片主题</label>
-        <div class="theme-dots" role="tablist" aria-label="名片主题">
-          <button
-            v-for="t in themes"
-            :key="t.id"
-            class="theme-dot"
-            :class="{ active: theme.id === t.id, 'is-white': t.id === 'classic' }"
-            :style="{ background: t.dot }"
-            :title="t.name"
-            :aria-label="t.name"
-            role="tab"
-            :aria-selected="theme.id === t.id"
-            @click="$emit('select-theme', t)"
-          ></button>
-        </div>
+    <!-- 名片主题选择 -->
+    <div class="theme-field">
+      <label class="theme-label">名片主题</label>
+      <div class="theme-dots" role="tablist" aria-label="名片主题">
+        <button
+          v-for="t in themes"
+          :key="t.id"
+          class="theme-dot"
+          :class="{ active: theme.id === t.id, 'is-white': t.id === 'classic' }"
+          :style="{ background: t.dot }"
+          :title="t.name"
+          :aria-label="t.name"
+          role="tab"
+          :aria-selected="theme.id === t.id"
+          @click="$emit('select-theme', t)"
+        ></button>
       </div>
+    </div>
 
-      <div class="form-actions">
-        <n-button type="success" @click="$emit('reset')">重置名片</n-button>
-      </div>
-    </form>
+    <div class="form-actions">
+      <n-button type="success" @click="$emit('reset')">重置名片</n-button>
+    </div>
 
     <!-- 联系方式抽屉（Naive UI） -->
-    <n-drawer
-      :show="drawerOpen"
-      :width="380"
-      placement="right"
-      :mask-closable="true"
-      @update:show="(v) => (drawerOpen = v)"
-    >
+    <n-drawer :show="drawerOpen" :width="380" @update:show="(v) => (drawerOpen = v)">
       <n-drawer-content title="联系方式" closable>
         <template #header-extra>
           <span style="font-size: 12px; color: #94a3b8">留空不显示</span>
