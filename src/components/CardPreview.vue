@@ -119,8 +119,9 @@ async function exportImage() {
   clone.querySelector('.lg-svg')?.remove()
   clone.querySelector('.export-icon')?.remove()
 
-  // 2. 用纯色背景模拟磨砂玻璃（原页面背景为 #ede9fe），去掉 backdrop-filter
-  clone.style.background = '#f5f3ff'
+  // 2. 用主题纯色背景模拟磨砂玻璃（去掉 backdrop-filter，foreignObject 不支持）
+  const solidBg = getComputedStyle(original).getPropertyValue('--theme-card-bg-solid').trim() || '#f5f3ff'
+  clone.style.background = solidBg
   clone.style.backdropFilter = 'none'
   clone.style.webkitBackdropFilter = 'none'
   clone.style.border = '1px solid rgba(255,255,255,0.8)'
@@ -171,7 +172,7 @@ async function exportImage() {
     const dataUrl = await toPng(clone, {
       pixelRatio: 2,
       cacheBust: true,
-      backgroundColor: '#f5f3ff'
+      backgroundColor: solidBg
     })
     const link = document.createElement('a')
     link.download = `${props.form.name || '名片'}-名片.png`
@@ -288,7 +289,7 @@ async function exportImage() {
     inset 0 2px 2px rgba(255, 255, 255, 0.95),
     inset 0 -2px 4px rgba(255, 255, 255, 0.35),
     inset 0 0 60px rgba(255, 255, 255, 0.08),
-    0 18px 50px rgba(31, 38, 135, 0.22),
+    0 18px 50px var(--theme-shadow),
     0 4px 14px rgba(31, 38, 135, 0.1);
   z-index: 0;
 }
@@ -402,7 +403,7 @@ async function exportImage() {
 
 .theme-dot.active {
   transform: scale(1.3);
-  outline: 2px solid var(--primary);
+  outline: 2px solid var(--theme-accent);
   outline-offset: 1px;
 }
 
@@ -435,32 +436,32 @@ async function exportImage() {
   font-size: 44px;
   font-weight: 700;
   color: #fff;
-  background: linear-gradient(135deg, #a78bfa, #818cf8);
+  background: var(--theme-fallback-grad);
 }
 
 /* 文字信息 */
 .name {
   font-size: 26px;
   font-weight: 700;
-  color: var(--text-main);
+  color: var(--theme-text-main);
   letter-spacing: 0.5px;
 }
 
 .empty-name {
-  color: var(--text-weak);
+  color: var(--theme-text-weak);
   font-style: italic;
 }
 
 .title {
   margin-top: 7px;
   font-size: 15px;
-  color: var(--text-sub);
+  color: var(--theme-text-sub);
 }
 
 .company {
   margin-top: 4px;
   font-size: 14px;
-  color: var(--text-weak);
+  color: var(--theme-text-weak);
 }
 
 .divider {
@@ -468,6 +469,7 @@ async function exportImage() {
   height: 3px;
   border-radius: 2px;
   margin: 15px 0;
+  background: var(--theme-divider-grad);
   transition: background 0.4s ease;
 }
 
@@ -475,7 +477,7 @@ async function exportImage() {
 .bio {
   font-size: 15px;
   line-height: 1.7;
-  color: var(--text-sub);
+  color: var(--theme-text-sub);
   text-align: center;
   max-width: 86%;
 }
@@ -483,7 +485,7 @@ async function exportImage() {
 .toggle-bio {
   margin-top: 11px;
   font-size: 14px;
-  color: var(--link);
+  color: var(--theme-link);
   background: none;
   border: none;
   cursor: pointer;
@@ -502,6 +504,11 @@ async function exportImage() {
   gap: 13px;
 }
 
+.card-preview .btn {
+  background: var(--theme-btn-bg);
+  color: var(--theme-btn-text);
+}
+
 /* 右上角导出图标 */
 .card-preview .export-icon {
   position: absolute;
@@ -516,7 +523,7 @@ async function exportImage() {
   border-radius: 50%;
   border: none;
   cursor: pointer;
-  color: #5b21b6;
+  color: var(--theme-export-color);
   background: rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -527,7 +534,7 @@ async function exportImage() {
 .card-preview .export-icon:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.85);
   transform: scale(1.08);
-  color: #7c3aed;
+  color: var(--theme-export-hover);
 }
 
 .card-preview .export-icon:disabled {
@@ -543,37 +550,131 @@ async function exportImage() {
   to { transform: rotate(360deg); }
 }
 
-/* 主题配色 */
-.theme-violet .avatar-wrap {
-  background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+/* ========== 主题配色系统 ========== */
+/* 每个主题定义完整的色彩变量，覆盖卡片所有彩色元素 */
+
+/* 紫罗兰 */
+.theme-violet {
+  --theme-accent: #8b5cf6;
+  --theme-avatar-grad: linear-gradient(135deg, #c4b5fd, #a78bfa);
+  --theme-divider-grad: linear-gradient(90deg, #a78bfa, #c4b5fd);
+  --theme-fallback-grad: linear-gradient(135deg, #a78bfa, #818cf8);
+  --theme-text-main: #1e1b4b;
+  --theme-text-sub: #4c1d95;
+  --theme-text-weak: #7c3aed;
+  --theme-link: #7c3aed;
+  --theme-card-bg: rgba(237, 233, 254, 0.55);
+  --theme-card-bg-solid: #ede9fe;
+  --theme-btn-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #6d28d9;
+  --theme-export-hover: #7c3aed;
+  --theme-shadow: rgba(76, 29, 149, 0.22);
 }
 
-.theme-violet .divider {
-  background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+/* 暮光蓝 */
+.theme-twilight {
+  --theme-accent: #3b82f6;
+  --theme-avatar-grad: linear-gradient(135deg, #60a5fa, #6366f1);
+  --theme-divider-grad: linear-gradient(90deg, #60a5fa, #6366f1);
+  --theme-fallback-grad: linear-gradient(135deg, #60a5fa, #3b82f6);
+  --theme-text-main: #0c1a3a;
+  --theme-text-sub: #1e3a8a;
+  --theme-text-weak: #3b82f6;
+  --theme-link: #2563eb;
+  --theme-card-bg: rgba(219, 234, 254, 0.55);
+  --theme-card-bg-solid: #dbeafe;
+  --theme-btn-bg: linear-gradient(135deg, #3b82f6, #6366f1);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #1d4ed8;
+  --theme-export-hover: #2563eb;
+  --theme-shadow: rgba(30, 58, 138, 0.22);
 }
 
-.theme-twilight .avatar-wrap {
-  background: linear-gradient(135deg, #60a5fa, #6366f1);
+/* 晨曦绿 */
+.theme-mint {
+  --theme-accent: #10b981;
+  --theme-avatar-grad: linear-gradient(135deg, #6ee7b7, #34d399);
+  --theme-divider-grad: linear-gradient(90deg, #6ee7b7, #34d399);
+  --theme-fallback-grad: linear-gradient(135deg, #6ee7b7, #10b981);
+  --theme-text-main: #064e3b;
+  --theme-text-sub: #047857;
+  --theme-text-weak: #059669;
+  --theme-link: #059669;
+  --theme-card-bg: rgba(204, 251, 241, 0.55);
+  --theme-card-bg-solid: #ccfbf1;
+  --theme-btn-bg: linear-gradient(135deg, #10b981, #059669);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #047857;
+  --theme-export-hover: #059669;
+  --theme-shadow: rgba(4, 120, 87, 0.22);
 }
 
-.theme-twilight .divider {
-  background: linear-gradient(90deg, #60a5fa, #6366f1);
+/* 夕阳橙 */
+.theme-sunset {
+  --theme-accent: #f97316;
+  --theme-avatar-grad: linear-gradient(135deg, #fbbf24, #fb7185);
+  --theme-divider-grad: linear-gradient(90deg, #fbbf24, #fb7185);
+  --theme-fallback-grad: linear-gradient(135deg, #fbbf24, #f97316);
+  --theme-text-main: #431407;
+  --theme-text-sub: #9a3412;
+  --theme-text-weak: #c2410c;
+  --theme-link: #ea580c;
+  --theme-card-bg: rgba(254, 243, 199, 0.55);
+  --theme-card-bg-solid: #fef3c7;
+  --theme-btn-bg: linear-gradient(135deg, #f97316, #fb7185);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #c2410c;
+  --theme-export-hover: #ea580c;
+  --theme-shadow: rgba(154, 52, 18, 0.22);
 }
 
-.theme-mint .avatar-wrap {
-  background: linear-gradient(135deg, #6ee7b7, #34d399);
+/* 玫瑰粉 */
+.theme-rose {
+  --theme-accent: #ec4899;
+  --theme-avatar-grad: linear-gradient(135deg, #f9a8d4, #ec4899);
+  --theme-divider-grad: linear-gradient(90deg, #f9a8d4, #ec4899);
+  --theme-fallback-grad: linear-gradient(135deg, #f9a8d4, #ec4899);
+  --theme-text-main: #4a044e;
+  --theme-text-sub: #9d174d;
+  --theme-text-weak: #be185d;
+  --theme-link: #db2777;
+  --theme-card-bg: rgba(252, 231, 243, 0.55);
+  --theme-card-bg-solid: #fce7f3;
+  --theme-btn-bg: linear-gradient(135deg, #ec4899, #db2777);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #be185d;
+  --theme-export-hover: #db2777;
+  --theme-shadow: rgba(157, 23, 77, 0.22);
 }
 
-.theme-mint .divider {
-  background: linear-gradient(90deg, #6ee7b7, #34d399);
+/* 深海蓝 */
+.theme-ocean {
+  --theme-accent: #0ea5e9;
+  --theme-avatar-grad: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  --theme-divider-grad: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  --theme-fallback-grad: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  --theme-text-main: #082f49;
+  --theme-text-sub: #075985;
+  --theme-text-weak: #0369a1;
+  --theme-link: #0284c7;
+  --theme-card-bg: rgba(224, 242, 254, 0.55);
+  --theme-card-bg-solid: #e0f2fe;
+  --theme-btn-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #0369a1;
+  --theme-export-hover: #0284c7;
+  --theme-shadow: rgba(7, 89, 133, 0.22);
 }
 
-.theme-sunset .avatar-wrap {
-  background: linear-gradient(135deg, #fbbf24, #fb7185);
-}
-
-.theme-sunset .divider {
-  background: linear-gradient(90deg, #fbbf24, #fb7185);
+/* 卡片背景色调：用主题色半透明叠加在磨砂白之上 */
+.card-preview.theme-violet,
+.card-preview.theme-twilight,
+.card-preview.theme-mint,
+.card-preview.theme-sunset,
+.card-preview.theme-rose,
+.card-preview.theme-ocean {
+  background-color: var(--theme-card-bg);
 }
 
 /* 光标 */
@@ -581,7 +682,7 @@ async function exportImage() {
   display: inline-block;
   width: 2px;
   height: 1em;
-  background: var(--text-sub);
+  background: var(--theme-text-sub);
   vertical-align: middle;
   margin-left: 2px;
   animation: blink 0.9s step-end infinite;
