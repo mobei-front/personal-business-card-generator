@@ -1,7 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useMessage } from 'naive-ui'
-import FormField from './FormField.vue'
 
 // 双向绑定父组件传入的 form 对象
 const form = defineModel('form', {
@@ -58,23 +57,30 @@ function handleComplete() {
     <h3 class="form-title">编辑名片 <span>✨</span></h3>
 
     <form @submit.prevent>
-      <FormField v-model="form.name" label="姓名" placeholder="请输入姓名" />
-      <FormField v-model="form.title" label="职位" placeholder="请输入职位" />
-      <FormField v-model="form.company" label="公司" placeholder="请输入公司" />
-      <FormField
-        v-model="form.bio"
-        label="个人简介"
-        type="textarea"
-        placeholder="一句话介绍自己"
-        @change="$emit('bio-blur')"
-      />
-      <FormField
-        v-model="form.avatar"
-        label="头像链接"
-        type="url"
-        placeholder="https://..."
-        hint="支持任意在线图片地址，加载失败时显示首字母占位"
-      />
+      <n-form label-placement="top" size="large">
+        <n-form-item label="姓名">
+          <n-input v-model:value="form.name" placeholder="请输入姓名" />
+        </n-form-item>
+        <n-form-item label="职位">
+          <n-input v-model:value="form.title" placeholder="请输入职位" />
+        </n-form-item>
+        <n-form-item label="公司">
+          <n-input v-model:value="form.company" placeholder="请输入公司" />
+        </n-form-item>
+        <n-form-item label="个人简介">
+          <n-input
+            v-model:value="form.bio"
+            type="textarea"
+            placeholder="一句话介绍自己"
+            :autosize="{ minRows: 2, maxRows: 4 }"
+            @change="$emit('bio-blur')"
+          />
+        </n-form-item>
+        <n-form-item label="头像链接">
+          <n-input v-model:value="form.avatar" type="url" placeholder="https://..." />
+          <span class="field-hint">支持任意在线图片地址，加载失败时显示首字母占位</span>
+        </n-form-item>
+      </n-form>
 
       <!-- 联系方式入口按钮 -->
       <button type="button" class="contact-entry" @click="openDrawer">
@@ -109,7 +115,7 @@ function handleComplete() {
       </div>
 
       <div class="form-actions">
-        <button class="btn btn-green" @click="$emit('reset')">重置名片</button>
+        <n-button type="success" @click="$emit('reset')">重置名片</n-button>
       </div>
     </form>
 
@@ -166,6 +172,13 @@ function handleComplete() {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.field-hint {
+  display: block;
+  font-size: 12px;
+  color: var(--text-weak);
+  margin-top: 4px;
 }
 
 /* 联系方式入口按钮 */
