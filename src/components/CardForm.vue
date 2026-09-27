@@ -78,7 +78,9 @@ function handleComplete() {
         </n-form-item>
         <n-form-item label="头像链接">
           <n-input v-model:value="form.avatar" type="url" placeholder="https://..." />
-          <span class="field-hint">支持任意在线图片地址，加载失败时显示首字母占位</span>
+          <template #feedback>
+            <span class="field-hint">支持任意在线图片地址，加载失败时显示首字母占位</span>
+          </template>
         </n-form-item>
       </n-form>
 
