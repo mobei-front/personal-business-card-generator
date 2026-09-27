@@ -6,7 +6,7 @@ const createDefaultForm = () => ({
   name: '陌北',
   title: 'AI全栈开发工程师',
   company: '陌北科技有限公司',
-  bio: '热爱技术，喜欢把复杂工程逐步拆解成各个小模块，形成一个完整的系统。',
+  bio: '热爱技术，喜欢把复杂工程逐步拆解成各个小模块，形成一个完整的系统',
   avatar: 'https://mobei-kb.pages.dev/image/logo.png'
 })
 
