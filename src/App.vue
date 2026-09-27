@@ -13,7 +13,6 @@ const {
   bioTypeKey,
   initials,
   selectTheme,
-  nextTheme,
   reset,
   toggleBio,
   triggerBioType,
@@ -30,20 +29,24 @@ const {
       <!-- 左侧：名片预览 -->
       <CardPreview
         :form="form"
-        :themes="themes"
         :theme="theme"
         :avatar-ok="avatarOk"
         :bio-expanded="bioExpanded"
         :bio-type-key="bioTypeKey"
         :initials="initials"
-        @select-theme="selectTheme"
-        @next-theme="nextTheme"
         @toggle-bio="toggleBio"
         @avatar-error="onAvatarError"
       />
 
       <!-- 右侧：编辑表单 -->
-      <CardForm v-model:form="form" @bio-blur="triggerBioType" @reset="reset" />
+      <CardForm
+        v-model:form="form"
+        :themes="themes"
+        :theme="theme"
+        @bio-blur="triggerBioType"
+        @reset="reset"
+        @select-theme="selectTheme"
+      />
     </div>
   </div>
 </template>

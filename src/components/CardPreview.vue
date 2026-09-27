@@ -8,10 +8,6 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  themes: {
-    type: Array,
-    required: true
-  },
   theme: {
     type: Object,
     required: true
@@ -34,7 +30,7 @@ const props = defineProps({
   }
 })
 
-defineEmits(['select-theme', 'next-theme', 'toggle-bio', 'avatar-error'])
+defineEmits(['toggle-bio', 'avatar-error'])
 
 // 简介打字机效果
 const typedBio = ref('')
@@ -216,21 +212,6 @@ async function exportImage() {
       </svg>
     </button>
 
-    <!-- 主题切换圆点 -->
-    <div class="theme-dots" role="tablist" aria-label="名片主题">
-      <button
-        v-for="t in themes"
-        :key="t.id"
-        class="theme-dot"
-        :class="{ active: theme.id === t.id }"
-        :style="{ background: t.dot }"
-        :title="t.name"
-        role="tab"
-        :aria-selected="theme.id === t.id"
-        @click="$emit('select-theme', t)"
-      ></button>
-    </div>
-
     <!-- 头像 -->
     <div class="avatar-wrap">
       <img
@@ -262,11 +243,6 @@ async function exportImage() {
     <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
       {{ bioExpanded ? '收起简介' : '展开简介' }}
     </button>
-
-    <!-- 操作按钮 -->
-    <div class="actions">
-      <button class="btn btn-blue" @click="$emit('next-theme')">切换名片</button>
-    </div>
   </section>
 </template>
 
@@ -379,34 +355,6 @@ async function exportImage() {
   z-index: 3;
 }
 
-/* 主题切换圆点 */
-.theme-dots {
-  display: flex;
-  gap: 9px;
-  margin-bottom: 22px;
-}
-
-.theme-dot {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
-  transition: transform 0.18s ease;
-  padding: 0;
-}
-
-.theme-dot:hover {
-  transform: scale(1.15);
-}
-
-.theme-dot.active {
-  transform: scale(1.3);
-  outline: 2px solid var(--theme-accent);
-  outline-offset: 1px;
-}
-
 /* 头像 */
 .avatar-wrap {
   width: 132px;
@@ -414,6 +362,7 @@ async function exportImage() {
   border-radius: 50%;
   padding: 4px;
   margin-bottom: 20px;
+  background: var(--theme-avatar-grad);
   transition: background 0.4s ease;
 }
 
@@ -497,18 +446,6 @@ async function exportImage() {
   text-decoration: underline;
 }
 
-/* 按钮区 */
-.actions {
-  margin-top: 26px;
-  display: flex;
-  gap: 13px;
-}
-
-.card-preview .btn {
-  background: var(--theme-btn-bg);
-  color: var(--theme-btn-text);
-}
-
 /* 右上角导出图标 */
 .card-preview .export-icon {
   position: absolute;
@@ -552,6 +489,30 @@ async function exportImage() {
 
 /* ========== 主题配色系统 ========== */
 /* 每个主题定义完整的色彩变量，覆盖卡片所有彩色元素 */
+
+/* 经典白（默认）：磨砂玻璃透明背景 + 蓝灰点缀，极简高级风 */
+.theme-classic {
+  --theme-accent: #64748b;
+  --theme-avatar-grad: #ffffff;
+  --theme-divider-grad: linear-gradient(90deg, #e2e8f0, #94a3b8);
+  --theme-fallback-grad: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+  --theme-text-main: #1e293b;
+  --theme-text-sub: #475569;
+  --theme-text-weak: #94a3b8;
+  --theme-link: #64748b;
+  --theme-card-bg: rgba(255, 255, 255, 0.22);
+  --theme-card-bg-solid: #f5f3ff;
+  --theme-btn-bg: linear-gradient(135deg, #94a3b8, #475569);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #475569;
+  --theme-export-hover: #1e293b;
+  --theme-shadow: rgba(15, 23, 42, 0.12);
+}
+
+/* 经典白头像框：纯白底 + 细微阴影描边，在磨砂玻璃上有立体感 */
+.theme-classic .avatar-wrap {
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3), 0 4px 12px rgba(15, 23, 42, 0.08);
+}
 
 /* 紫罗兰 */
 .theme-violet {
@@ -668,6 +629,7 @@ async function exportImage() {
 }
 
 /* 卡片背景色调：用主题色半透明叠加在磨砂白之上 */
+.card-preview.theme-classic,
 .card-preview.theme-violet,
 .card-preview.theme-twilight,
 .card-preview.theme-mint,
