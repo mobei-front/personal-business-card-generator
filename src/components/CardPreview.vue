@@ -249,10 +249,13 @@ async function exportImage() {
 <style scoped>
 .card-preview {
   position: relative;
-  padding: 44px 31px 31px;
+  width: 100%;
+  height: 100%;
+  padding: 36px 24px 28px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   overflow: hidden;
   /* 液态玻璃基础：低透明度 + 强磨砂饱和，让背景色彩充分透出 */
   background: rgba(255, 255, 255, 0.22);
@@ -357,11 +360,11 @@ async function exportImage() {
 
 /* 头像 */
 .avatar-wrap {
-  width: 132px;
-  height: 132px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   padding: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   background: var(--theme-avatar-grad);
   transition: background 0.4s ease;
 }
@@ -382,7 +385,7 @@ async function exportImage() {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 44px;
+  font-size: 52px;
   font-weight: 700;
   color: #fff;
   background: var(--theme-fallback-grad);
@@ -390,7 +393,7 @@ async function exportImage() {
 
 /* 文字信息 */
 .name {
-  font-size: 26px;
+  font-size: 30px;
   font-weight: 700;
   color: var(--theme-text-main);
   letter-spacing: 0.5px;
@@ -402,38 +405,38 @@ async function exportImage() {
 }
 
 .title {
-  margin-top: 7px;
-  font-size: 15px;
+  margin-top: 8px;
+  font-size: 17px;
   color: var(--theme-text-sub);
 }
 
 .company {
-  margin-top: 4px;
-  font-size: 14px;
+  margin-top: 6px;
+  font-size: 15px;
   color: var(--theme-text-weak);
 }
 
 .divider {
-  width: 44px;
+  width: 52px;
   height: 3px;
   border-radius: 2px;
-  margin: 15px 0;
+  margin: 20px 0;
   background: var(--theme-divider-grad);
   transition: background 0.4s ease;
 }
 
 /* 简介 */
 .bio {
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.7;
   color: var(--theme-text-sub);
   text-align: center;
-  max-width: 86%;
+  max-width: 90%;
 }
 
 .toggle-bio {
-  margin-top: 11px;
-  font-size: 14px;
+  margin-top: 14px;
+  font-size: 15px;
   color: var(--theme-link);
   background: none;
   border: none;
