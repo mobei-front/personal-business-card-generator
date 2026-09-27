@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted, computed } from 'vue'
 import { toPng } from 'html-to-image'
 
 // 名片预览组件：纯展示 + 事件上报，状态由父组件管理
@@ -31,6 +31,11 @@ const props = defineProps({
 })
 
 defineEmits(['toggle-bio', 'avatar-error'])
+
+// 是否有联系方式（任一非空即显示联系方式区）
+const hasContact = computed(() =>
+  !!(props.form.email || props.form.phone || props.form.wechat || props.form.github || props.form.blog)
+)
 
 // 简介打字机效果
 const typedBio = ref('')
@@ -243,6 +248,43 @@ async function exportImage() {
     <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
       {{ bioExpanded ? '收起简介' : '展开简介' }}
     </button>
+
+    <!-- 联系方式（仅非空时显示） -->
+    <ul v-if="hasContact" class="contacts">
+      <li v-if="form.email" class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+        <span class="contact-text">{{ form.email }}</span>
+      </li>
+      <li v-if="form.phone" class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        <span class="contact-text">{{ form.phone }}</span>
+      </li>
+      <li v-if="form.wechat" class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path d="M8.5 4C4.91 4 2 6.46 2 9.5c0 1.74.95 3.29 2.43 4.29L4 16l2.5-1.5c.5.13 1.02.2 1.55.2h.3a5.5 5.5 0 0 1-.15-1.2c0-3.04 2.91-5.5 6.5-5.5.23 0 .45.01.67.03C14.5 5.86 11.8 4 8.5 4zm-2 3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm4 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zM14.8 10c-3.03 0-5.5 2.02-5.5 4.5 0 1.4.78 2.65 2 3.47L11 20l1.9-1.05c.57.16 1.18.25 1.8.25 3.03 0 5.5-2.02 5.5-4.5S17.83 10 14.8 10zm-1.5 3.25a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5zm3 0a.75.75 0 1 1 0 1.5.75.75 0 0 1 0-1.5z" />
+        </svg>
+        <span class="contact-text">{{ form.wechat }}</span>
+      </li>
+      <li v-if="form.github" class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.66-.22.66-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.16.58.67.48A10 10 0 0 0 22 12C22 6.48 17.52 2 12 2z" />
+        </svg>
+        <span class="contact-text">{{ form.github }}</span>
+      </li>
+      <li v-if="form.blog" class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12h20" />
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        <span class="contact-text">{{ form.blog }}</span>
+      </li>
+    </ul>
   </section>
 </template>
 
@@ -449,6 +491,37 @@ async function exportImage() {
 .toggle-bio:hover {
   opacity: 0.7;
   text-decoration: underline;
+}
+
+/* 联系方式 */
+.contacts {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+  max-width: 80%;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--theme-text-sub);
+  word-break: break-all;
+}
+
+.contact-icon {
+  flex-shrink: 0;
+  color: var(--theme-link);
+  opacity: 0.85;
+}
+
+.contact-text {
+  line-height: 1.4;
 }
 
 /* 右上角导出图标 */

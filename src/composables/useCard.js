@@ -7,7 +7,13 @@ const createDefaultForm = () => ({
   title: 'AI全栈开发工程师',
   company: '陌北科技有限公司',
   bio: '热爱技术，喜欢把复杂工程逐步拆解成各个小模块，形成一个完整的系统',
-  avatar: 'https://mobei-kb.pages.dev/image/logo.png'
+  avatar: 'https://mobei-kb.pages.dev/image/logo.png',
+  // 联系方式（仅非空时在名片上展示）
+  email: 'mobei@example.com',
+  phone: '13800138000',
+  wechat: 'mobei_dev',
+  github: 'mobei',
+  blog: ''
 })
 
 // 模块级单例状态：多个组件共享同一份名片数据

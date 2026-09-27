@@ -1,4 +1,5 @@
 <script setup>
+import { ref, computed } from 'vue'
 import FormField from './FormField.vue'
 
 // 双向绑定父组件传入的 form 对象
@@ -19,6 +20,22 @@ defineProps({
 })
 
 defineEmits(['bio-blur', 'reset', 'select-theme'])
+
+// 联系方式抽屉
+const drawerOpen = ref(false)
+
+// 已填写的联系方式数量
+const contactCount = computed(() => {
+  const fields = ['email', 'phone', 'wechat', 'github', 'blog']
+  return fields.filter((k) => form.value[k]).length
+})
+
+function openDrawer() {
+  drawerOpen.value = true
+}
+function closeDrawer() {
+  drawerOpen.value = false
+}
 </script>
 
 <template>
@@ -44,6 +61,19 @@ defineEmits(['bio-blur', 'reset', 'select-theme'])
         hint="支持任意在线图片地址，加载失败时显示首字母占位"
       />
 
+      <!-- 联系方式入口按钮 -->
+      <button type="button" class="contact-entry" @click="openDrawer">
+        <svg class="entry-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        <span class="entry-text">联系方式</span>
+        <span v-if="contactCount" class="entry-count">{{ contactCount }} 项已填</span>
+        <span v-else class="entry-hint required">请填写必要的联系方式</span>
+        <svg class="entry-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
       <!-- 名片主题选择 -->
       <div class="theme-field">
         <label class="theme-label">名片主题</label>
@@ -67,6 +97,43 @@ defineEmits(['bio-blur', 'reset', 'select-theme'])
         <button class="btn btn-green" @click="$emit('reset')">重置名片</button>
       </div>
     </form>
+
+    <!-- 联系方式抽屉（Naive UI） -->
+    <n-drawer
+      :show="drawerOpen"
+      :width="380"
+      placement="right"
+      :mask-closable="true"
+      @update:show="(v) => (drawerOpen = v)"
+    >
+      <n-drawer-content title="联系方式" closable>
+        <template #header-extra>
+          <span style="font-size: 12px; color: #94a3b8">留空不显示</span>
+        </template>
+        <n-form label-placement="top" size="large">
+          <n-form-item label="手机号" required>
+            <n-input v-model:value="form.phone" placeholder="13800138000" type="tel" />
+          </n-form-item>
+          <n-form-item label="微信号" required>
+            <n-input v-model:value="form.wechat" placeholder="your_wechat_id" />
+          </n-form-item>
+          <n-form-item label="邮箱">
+            <n-input v-model:value="form.email" placeholder="name@example.com" type="email" />
+          </n-form-item>
+          <n-form-item label="GitHub">
+            <n-input v-model:value="form.github" placeholder="github_username" />
+          </n-form-item>
+          <n-form-item label="个人博客">
+            <n-input v-model:value="form.blog" placeholder="https://your-blog.com" type="url" />
+          </n-form-item>
+        </n-form>
+        <template #footer>
+          <n-space justify="end">
+            <n-button type="primary" @click="closeDrawer">完成</n-button>
+          </n-space>
+        </template>
+      </n-drawer-content>
+    </n-drawer>
   </section>
 </template>
 
@@ -83,6 +150,62 @@ defineEmits(['bio-blur', 'reset', 'select-theme'])
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+/* 联系方式入口按钮 */
+.contact-entry {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  margin: 14px 0 18px;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px dashed rgba(139, 92, 246, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--primary);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.contact-entry:hover {
+  background: rgba(139, 92, 246, 0.14);
+  border-color: rgba(139, 92, 246, 0.55);
+}
+
+.entry-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.entry-text {
+  font-weight: 600;
+}
+
+.entry-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--primary);
+  background: rgba(139, 92, 246, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.entry-hint {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--text-weak);
+}
+
+.entry-hint.required {
+  color: #e11d48;
+  font-weight: 600;
+}
+
+.entry-arrow {
+  flex-shrink: 0;
+  color: var(--text-weak);
 }
 
 /* 主题选择 */
