@@ -1,0 +1,154 @@
+/* ============================================
+ * 名片主题色彩系统
+ * 每个主题定义 13 个 CSS 变量，覆盖名片所有彩色元素
+ * 通过 .card-preview.theme-{id} 切换
+ * ============================================ */
+
+/* 经典白（默认）：磨砂玻璃透明背景 + 蓝灰点缀，极简高级风 */
+.theme-classic {
+  --theme-accent: #64748b;
+  --theme-avatar-grad: #ffffff;
+  --theme-divider-grad: linear-gradient(90deg, #e2e8f0, #94a3b8);
+  --theme-fallback-grad: linear-gradient(135deg, #f1f5f9, #cbd5e1);
+  --theme-text-main: #1e293b;
+  --theme-text-sub: #475569;
+  --theme-text-weak: #94a3b8;
+  --theme-link: #64748b;
+  --theme-card-bg: rgba(255, 255, 255, 0.22);
+  --theme-card-bg-solid: #f5f3ff;
+  --theme-btn-bg: linear-gradient(135deg, #94a3b8, #475569);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #475569;
+  --theme-export-hover: #1e293b;
+  --theme-shadow: rgba(15, 23, 42, 0.12);
+}
+
+/* 经典白头像框：纯白底 + 细微阴影描边，在磨砂玻璃上有立体感 */
+.theme-classic .avatar-wrap {
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.3), 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+/* 紫罗兰 */
+.theme-violet {
+  --theme-accent: #8b5cf6;
+  --theme-avatar-grad: linear-gradient(135deg, #c4b5fd, #a78bfa);
+  --theme-divider-grad: linear-gradient(90deg, #a78bfa, #c4b5fd);
+  --theme-fallback-grad: linear-gradient(135deg, #a78bfa, #818cf8);
+  --theme-text-main: #1e1b4b;
+  --theme-text-sub: #4c1d95;
+  --theme-text-weak: #7c3aed;
+  --theme-link: #7c3aed;
+  --theme-card-bg: rgba(237, 233, 254, 0.55);
+  --theme-card-bg-solid: #ede9fe;
+  --theme-btn-bg: linear-gradient(135deg, #8b5cf6, #6366f1);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #6d28d9;
+  --theme-export-hover: #7c3aed;
+  --theme-shadow: rgba(76, 29, 149, 0.22);
+}
+
+/* 暮光蓝 */
+.theme-twilight {
+  --theme-accent: #3b82f6;
+  --theme-avatar-grad: linear-gradient(135deg, #60a5fa, #6366f1);
+  --theme-divider-grad: linear-gradient(90deg, #60a5fa, #6366f1);
+  --theme-fallback-grad: linear-gradient(135deg, #60a5fa, #3b82f6);
+  --theme-text-main: #0c1a3a;
+  --theme-text-sub: #1e3a8a;
+  --theme-text-weak: #3b82f6;
+  --theme-link: #2563eb;
+  --theme-card-bg: rgba(219, 234, 254, 0.55);
+  --theme-card-bg-solid: #dbeafe;
+  --theme-btn-bg: linear-gradient(135deg, #3b82f6, #6366f1);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #1d4ed8;
+  --theme-export-hover: #2563eb;
+  --theme-shadow: rgba(30, 58, 138, 0.22);
+}
+
+/* 晨曦绿 */
+.theme-mint {
+  --theme-accent: #10b981;
+  --theme-avatar-grad: linear-gradient(135deg, #6ee7b7, #34d399);
+  --theme-divider-grad: linear-gradient(90deg, #6ee7b7, #34d399);
+  --theme-fallback-grad: linear-gradient(135deg, #6ee7b7, #10b981);
+  --theme-text-main: #064e3b;
+  --theme-text-sub: #047857;
+  --theme-text-weak: #059669;
+  --theme-link: #059669;
+  --theme-card-bg: rgba(204, 251, 241, 0.55);
+  --theme-card-bg-solid: #ccfbf1;
+  --theme-btn-bg: linear-gradient(135deg, #10b981, #059669);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #047857;
+  --theme-export-hover: #059669;
+  --theme-shadow: rgba(4, 120, 87, 0.22);
+}
+
+/* 夕阳橙 */
+.theme-sunset {
+  --theme-accent: #f97316;
+  --theme-avatar-grad: linear-gradient(135deg, #fbbf24, #fb7185);
+  --theme-divider-grad: linear-gradient(90deg, #fbbf24, #fb7185);
+  --theme-fallback-grad: linear-gradient(135deg, #fbbf24, #f97316);
+  --theme-text-main: #431407;
+  --theme-text-sub: #9a3412;
+  --theme-text-weak: #c2410c;
+  --theme-link: #ea580c;
+  --theme-card-bg: rgba(254, 243, 199, 0.55);
+  --theme-card-bg-solid: #fef3c7;
+  --theme-btn-bg: linear-gradient(135deg, #f97316, #fb7185);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #c2410c;
+  --theme-export-hover: #ea580c;
+  --theme-shadow: rgba(154, 52, 18, 0.22);
+}
+
+/* 玫瑰粉 */
+.theme-rose {
+  --theme-accent: #ec4899;
+  --theme-avatar-grad: linear-gradient(135deg, #f9a8d4, #ec4899);
+  --theme-divider-grad: linear-gradient(90deg, #f9a8d4, #ec4899);
+  --theme-fallback-grad: linear-gradient(135deg, #f9a8d4, #ec4899);
+  --theme-text-main: #4a044e;
+  --theme-text-sub: #9d174d;
+  --theme-text-weak: #be185d;
+  --theme-link: #db2777;
+  --theme-card-bg: rgba(252, 231, 243, 0.55);
+  --theme-card-bg-solid: #fce7f3;
+  --theme-btn-bg: linear-gradient(135deg, #ec4899, #db2777);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #be185d;
+  --theme-export-hover: #db2777;
+  --theme-shadow: rgba(157, 23, 77, 0.22);
+}
+
+/* 深海蓝 */
+.theme-ocean {
+  --theme-accent: #0ea5e9;
+  --theme-avatar-grad: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  --theme-divider-grad: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  --theme-fallback-grad: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  --theme-text-main: #082f49;
+  --theme-text-sub: #075985;
+  --theme-text-weak: #0369a1;
+  --theme-link: #0284c7;
+  --theme-card-bg: rgba(224, 242, 254, 0.55);
+  --theme-card-bg-solid: #e0f2fe;
+  --theme-btn-bg: linear-gradient(135deg, #0ea5e9, #0284c7);
+  --theme-btn-text: #ffffff;
+  --theme-export-color: #0369a1;
+  --theme-export-hover: #0284c7;
+  --theme-shadow: rgba(7, 89, 133, 0.22);
+}
+
+/* 卡片背景色调：用主题色半透明叠加在磨砂白之上 */
+.card-preview.theme-classic,
+.card-preview.theme-violet,
+.card-preview.theme-twilight,
+.card-preview.theme-mint,
+.card-preview.theme-sunset,
+.card-preview.theme-rose,
+.card-preview.theme-ocean {
+  background-color: var(--theme-card-bg);
+}
