@@ -239,16 +239,6 @@ async function exportImage() {
 
     <div class="divider"></div>
 
-    <!-- 简介（可收起） -->
-    <transition name="fade">
-      <p v-show="bioExpanded && form.bio" class="bio">
-        {{ typedBio }}<span v-if="cursorVisible" class="cursor"></span>
-      </p>
-    </transition>
-    <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
-      {{ bioExpanded ? '收起简介' : '展开简介' }}
-    </button>
-
     <!-- 联系方式（仅非空时显示） -->
     <ul v-if="hasContact" class="contacts">
       <li v-if="form.email" class="contact-item">
@@ -285,6 +275,16 @@ async function exportImage() {
         <span class="contact-text">{{ form.blog }}</span>
       </li>
     </ul>
+
+    <!-- 简介（可收起） -->
+    <transition name="fade">
+      <p v-show="bioExpanded && form.bio" class="bio">
+        {{ typedBio }}<span v-if="cursorVisible" class="cursor"></span>
+      </p>
+    </transition>
+    <button v-if="form.bio" class="toggle-bio" @click="$emit('toggle-bio')">
+      {{ bioExpanded ? '收起简介' : '展开简介' }}
+    </button>
   </section>
 </template>
 
@@ -496,16 +496,19 @@ async function exportImage() {
 /* 联系方式 */
 .contacts {
   list-style: none;
-  margin: 16px 0 0;
+  margin: 16px 0 18px;
   padding: 0;
   display: flex;
-  flex-direction: column;
-  gap: 7px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  row-gap: 8px;
   width: 100%;
-  max-width: 80%;
+  max-width: 86%;
 }
 
 .contact-item {
+  flex: 0 0 48%;
   display: flex;
   align-items: center;
   gap: 8px;

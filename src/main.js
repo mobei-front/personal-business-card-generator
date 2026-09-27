@@ -8,7 +8,8 @@ import {
   NFormItem,
   NInput,
   NButton,
-  NSpace
+  NSpace,
+  NMessageProvider
 } from 'naive-ui'
 
 const app = createApp(App)
@@ -19,4 +20,5 @@ app.component('NFormItem', NFormItem)
 app.component('NInput', NInput)
 app.component('NButton', NButton)
 app.component('NSpace', NSpace)
+app.component('NMessageProvider', NMessageProvider)
 app.mount('#app')

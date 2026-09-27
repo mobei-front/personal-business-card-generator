@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useMessage } from 'naive-ui'
 import FormField from './FormField.vue'
 
 // 双向绑定父组件传入的 form 对象
@@ -35,6 +36,20 @@ function openDrawer() {
 }
 function closeDrawer() {
   drawerOpen.value = false
+}
+
+const message = useMessage()
+
+// 完成：校验必填项（手机号、微信号），为空则弹窗提示
+function handleComplete() {
+  const missing = []
+  if (!form.value.phone?.trim()) missing.push('手机号')
+  if (!form.value.wechat?.trim()) missing.push('微信号')
+  if (missing.length) {
+    message.warning(`请填写必要的联系方式：${missing.join('、')}`)
+    return
+  }
+  closeDrawer()
 }
 </script>
 
@@ -111,11 +126,11 @@ function closeDrawer() {
           <span style="font-size: 12px; color: #94a3b8">留空不显示</span>
         </template>
         <n-form label-placement="top" size="large">
-          <n-form-item label="手机号" required>
-            <n-input v-model:value="form.phone" placeholder="13800138000" type="tel" />
+          <n-form-item label="手机号（必填）" required>
+            <n-input v-model:value="form.phone" placeholder="请输入手机号" type="tel" />
           </n-form-item>
-          <n-form-item label="微信号" required>
-            <n-input v-model:value="form.wechat" placeholder="your_wechat_id" />
+          <n-form-item label="微信号（必填）" required>
+            <n-input v-model:value="form.wechat" placeholder="请输入微信号" />
           </n-form-item>
           <n-form-item label="邮箱">
             <n-input v-model:value="form.email" placeholder="name@example.com" type="email" />
@@ -129,7 +144,8 @@ function closeDrawer() {
         </n-form>
         <template #footer>
           <n-space justify="end">
-            <n-button type="primary" @click="closeDrawer">完成</n-button>
+            <n-button @click="closeDrawer">取消</n-button>
+            <n-button type="primary" @click="handleComplete">完成</n-button>
           </n-space>
         </template>
       </n-drawer-content>
